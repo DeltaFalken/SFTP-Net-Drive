@@ -51,8 +51,9 @@ public partial class App : Application
 
         _mainWindow = new MainWindow(_repo, _mounts);
 
-        // Show window on first run (no profiles yet); otherwise stay in tray
-        if (!_repo.Profiles.Any())
+        // Show window on manual launch; stay in tray when auto-started at logon
+        bool isAutostart = e.Args.Contains(StartupService.AutostartArg, StringComparer.OrdinalIgnoreCase);
+        if (!isAutostart)
             _mainWindow.Show();
 
         // Auto-mount profiles flagged for startup
