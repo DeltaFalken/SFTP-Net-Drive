@@ -24,6 +24,7 @@ public static class Strings
     public static string NoConnectionsHint => _de ? "Klicken Sie auf \"Neue Verbindung\", um einen SFTP-Server hinzuzufügen." : "Click \"New Connection\" to add an SFTP server.";
     public static string FooterHint        => _de ? "Laufwerke erscheinen als Netzlaufwerke im Windows Explorer." : "Drives appear as Network Drives in Windows Explorer.";
     public static string StartWithWindows  => _de ? "Mit Windows starten"                                    : "Start with Windows";
+    public static string CloseToTray       => _de ? "Beim Schließen in den Infobereich minimieren"          : "Minimize to tray on close";
 
     // ── Status labels (used in ProfileViewModel) ──────────────────────────────
     public static string StatusMounted    => _de ? "Verbunden"      : "Mounted";

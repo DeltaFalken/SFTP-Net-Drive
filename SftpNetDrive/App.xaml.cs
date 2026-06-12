@@ -1,5 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 using SftpNetDrive.Localization;
 using SftpNetDrive.Services;
@@ -17,7 +19,11 @@ namespace SftpNetDrive;
 
 public partial class App : Application
 {
+    private const string ActivationEventName = "SftpNetDrive_ActivateWindow";
+
     private static Mutex? _mutex;
+    private static EventWaitHandle? _activationEvent;
+    private static RegisteredWaitHandle? _activationWaitHandle;
     private WinForms.NotifyIcon? _tray;
     private MainWindow? _mainWindow;
     private readonly ProfileRepository _repo = new();
@@ -36,29 +42,67 @@ public partial class App : Application
             ex.Handled = true;
         };
 
-        // Single-instance guard
+        bool isAutostart = e.Args.Contains(StartupService.AutostartArg, StringComparer.OrdinalIgnoreCase);
+
+        // Single-instance guard + activation on manual launch
         _mutex = new Mutex(true, "SftpNetDrive_SingleInstance", out bool isFirst);
         if (!isFirst)
         {
-            MessageBox.Show(Strings.AlreadyRunningMsg, Strings.AlreadyRunningTitle,
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!isAutostart)
+            {
+                try
+                {
+                    using var existing = EventWaitHandle.OpenExisting(ActivationEventName);
+                    existing.Set();
+                }
+                catch { }
+            }
+
             Shutdown();
             return;
         }
 
+        _activationEvent = new EventWaitHandle(false, EventResetMode.AutoReset, ActivationEventName);
+        _activationWaitHandle = ThreadPool.RegisterWaitForSingleObject(_activationEvent, (_, __) =>
+        {
+            Dispatcher.Invoke(ShowMainWindow);
+        }, null, -1, executeOnlyOnce: false);
+
         if (!EnsureDokanOrWarn()) return;
         BuildTrayIcon();
 
-        _mainWindow = new MainWindow(_repo, _mounts);
+        if (StartupService.IsEnabled())
+            _ = Task.Run(() => StartupService.Refresh());
 
-        // Show window on manual launch; stay in tray when auto-started at logon
-        bool isAutostart = e.Args.Contains(StartupService.AutostartArg, StringComparer.OrdinalIgnoreCase);
+        _mainWindow = new MainWindow(_repo, _mounts);
+        _mainWindow.Closed += (_, _) => _mainWindow = null;
+
         if (!isAutostart)
             _mainWindow.Show();
 
-        // Auto-mount profiles flagged for startup
+        // Auto-mount profiles flagged for startup.
+        // In autostart mode the network may not be ready yet, so retry on failure.
         foreach (var profile in _repo.Profiles.Where(p => p.AutoMount))
-            _ = _mounts.MountAsync(profile);
+            _ = MountWithRetryAsync(profile, retryOnFailure: isAutostart);
+    }
+
+    // ── Auto-mount with retry ─────────────────────────────────────────────────
+
+    // Delays between retry attempts (seconds). Only used when retryOnFailure=true.
+    private static readonly int[] RetryDelays = [15, 30, 60];
+
+    private async Task MountWithRetryAsync(SftpNetDrive.Models.ConnectionProfile profile, bool retryOnFailure)
+    {
+        var (ok, _) = await _mounts.MountAsync(profile);
+        if (ok || !retryOnFailure) return;
+
+        foreach (var delaySec in RetryDelays)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(delaySec));
+            if (_mounts.IsMounted(profile.Id)) return;  // manually connected in the meantime
+            (ok, _) = await _mounts.MountAsync(profile);
+            if (ok) return;
+        }
     }
 
     // ── Tray icon (native WinForms — 100% reliable) ───────────────────────────
@@ -120,19 +164,45 @@ public partial class App : Application
         // Must dispatch to the WPF UI thread (DoubleClick arrives on WinForms thread)
         Dispatcher.Invoke(() =>
         {
-            if (_mainWindow is null) return;
+            if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished)
+                return;
+
+            if (_mainWindow is null || !_mainWindow.IsLoaded)
+                _mainWindow = new MainWindow(_repo, _mounts);
+
             _mainWindow.Show();
             _mainWindow.WindowState = WindowState.Normal;
             _mainWindow.Activate();
         });
     }
 
-    private void DoExit()
+    protected override void OnExit(ExitEventArgs e)
     {
         _mounts.UnmountAll();
-        _tray?.Dispose();
+        if (_tray is not null)
+        {
+            _tray.Visible = false;
+            _tray.Dispose();
+        }
+        _activationWaitHandle?.Unregister(null);
+        _activationEvent?.Dispose();
         _mutex?.ReleaseMutex();
-        Dispatcher.Invoke(Shutdown);
+        base.OnExit(e);
+    }
+
+    internal void RemoveTrayIcon()
+    {
+        if (_tray is not null)
+        {
+            _tray.Visible = false;
+            _tray.Dispose();
+            _tray = null;
+        }
+    }
+
+    private void DoExit()
+    {
+        Shutdown();
     }
 
     // ── Dokany check ─────────────────────────────────────────────────────────

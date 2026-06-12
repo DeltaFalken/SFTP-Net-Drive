@@ -14,6 +14,7 @@ public partial class MainWindow : Window
 {
     private readonly ProfileRepository _repo;
     private readonly MountService _mounts;
+    private readonly AppSettings _settings;
     private readonly List<ProfileViewModel> _vms = [];
 
     public MainWindow(ProfileRepository repo, MountService mounts)
@@ -23,8 +24,18 @@ public partial class MainWindow : Window
         _mounts = mounts;
         _mounts.MountChanged += OnMountChanged;
         Refresh();
+
+        _settings = SettingsService.Load();
+        CloseToTrayCheckBox.IsChecked = _settings.CloseToTray;
+
         // Reflect current startup registration state without triggering the event
         StartupCheckBox.IsChecked = StartupService.IsEnabled();
+
+        if (!_settings.CloseToTray)
+        {
+            // Remove any legacy hidden state when the app is started fresh.
+            Show();
+        }
     }
 
     private void Refresh()
@@ -105,6 +116,12 @@ public partial class MainWindow : Window
         Refresh();
     }
 
+    private void CloseToTray_Changed(object sender, RoutedEventArgs e)
+    {
+        _settings.CloseToTray = CloseToTrayCheckBox.IsChecked == true;
+        SettingsService.Save();
+    }
+
     private void Startup_Changed(object sender, RoutedEventArgs e)
     {
         bool enable = StartupCheckBox.IsChecked == true;
@@ -121,8 +138,15 @@ public partial class MainWindow : Window
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        e.Cancel = true; // minimize to tray instead of closing
-        Hide();
+        if (CloseToTrayCheckBox.IsChecked == true)
+        {
+            e.Cancel = true; // minimize to tray instead of closing
+            Hide();
+            return;
+        }
+
+        // Fully exit the app when the user chose not to minimize to tray.
+        System.Windows.Application.Current.Shutdown();
     }
 }
 

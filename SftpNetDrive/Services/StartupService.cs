@@ -1,66 +1,136 @@
 using System.Diagnostics;
 using System.IO;
+using System.Security;
+using System.Security.Principal;
+using System.Text;
 using Microsoft.Win32;
 
 namespace SftpNetDrive.Services;
 
 /// <summary>
-/// Registers / removes the app as a Windows logon startup entry.
-/// Primary: Task Scheduler with elevated rights (no UAC prompt at boot).
-/// Fallback: HKCU\Run registry key — used on ARM where schtasks may fail.
-/// Both methods pass --autostart so App.xaml.cs can suppress the window.
+/// Registers / removes the app as a Windows logon startup entry via Task Scheduler.
+/// Uses a task XML file so the exe path never needs command-line quoting — spaces in
+/// "Program Files" paths cannot break the argument parsing.
+/// The task runs with HighestAvailable privilege so no UAC prompt appears at logon.
 /// </summary>
 public static class StartupService
 {
-    private const string TaskName    = "SftpNetDrive";
-    private const string RegRunKey   = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+    private const string TaskName   = "SftpNetDrive";
+    private const string RegRunKey  = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
     internal const string AutostartArg = "--autostart";
 
+    // Only the scheduled task is considered authoritative; the HKCU\Run key is
+    // unreliable for admin-required apps (Windows silently drops the UAC elevation
+    // request at logon when launching from Run keys).
     public static bool IsEnabled() =>
-        Schtasks($"/Query /TN \"{TaskName}\"") == 0 || IsInRegistry();
+        Schtasks($"/Query /TN \"{TaskName}\"") == 0;
 
     public static bool Enable()
     {
-        var exe = Environment.ProcessPath;
-        if (string.IsNullOrEmpty(exe) || !File.Exists(exe)) return false;
+        var exe = GetCurrentExecutablePath();
+        if (string.IsNullOrEmpty(exe)) return false;
+        return CreateTaskViaXml(exe);
+    }
 
-        // /SC ONLOGON  — fires at any user logon
-        // /RL HIGHEST  — runs elevated, bypassing UAC prompt
-        // /F           — overwrite if already exists
-        var taskOk = Schtasks(
-            $"/Create /TN \"{TaskName}\" /TR \"\\\"{exe}\\\" {AutostartArg}\" /SC ONLOGON /RL HIGHEST /F") == 0;
-        if (taskOk) return true;
-
-        // Fallback for ARM and other environments where schtasks fails
-        return SetRegistry($"\"{exe}\" {AutostartArg}");
+    public static bool Refresh()
+    {
+        if (!IsEnabled()) return false;
+        return Enable();
     }
 
     public static bool Disable()
     {
         Schtasks($"/Delete /TN \"{TaskName}\" /F");
-        RemoveRegistry();
+        RemoveRegistryLegacy();
         return !IsEnabled();
     }
 
-    private static bool IsInRegistry()
-    {
-        using var key = Registry.CurrentUser.OpenSubKey(RegRunKey);
-        return key?.GetValue(TaskName) is not null;
-    }
+    // ── Task creation via XML ─────────────────────────────────────────────────
 
-    private static bool SetRegistry(string command)
+    private static bool CreateTaskViaXml(string exe)
     {
+        // Use the SID so the task is tied to this user regardless of
+        // domain/machine name formatting differences.
+        var sid = WindowsIdentity.GetCurrent().User?.Value;
+        if (string.IsNullOrEmpty(sid)) return false;
+
+        // SecurityElement.Escape handles any XML-special chars in the exe path
+        // (theoretical — Windows paths cannot contain < > & " in practice).
+        var xmlExe = SecurityElement.Escape(exe)!;
+
+        var xml = $"""
+            <?xml version="1.0" encoding="UTF-16"?>
+            <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+              <RegistrationInfo>
+                <Description>Starts SFTP Net Drive at logon without a UAC prompt.</Description>
+              </RegistrationInfo>
+              <Triggers>
+                <LogonTrigger>
+                  <Enabled>true</Enabled>
+                  <UserId>{sid}</UserId>
+                </LogonTrigger>
+              </Triggers>
+              <Principals>
+                <Principal id="Author">
+                  <UserId>{sid}</UserId>
+                  <LogonType>InteractiveToken</LogonType>
+                  <RunLevel>HighestAvailable</RunLevel>
+                </Principal>
+              </Principals>
+              <Settings>
+                <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+                <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+                <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+                <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+                <Hidden>false</Hidden>
+              </Settings>
+              <Actions Context="Author">
+                <Exec>
+                  <Command>{xmlExe}</Command>
+                  <Arguments>{AutostartArg}</Arguments>
+                </Exec>
+              </Actions>
+            </Task>
+            """;
+
+        var tempXml = Path.Combine(Path.GetTempPath(), "SftpNetDrive_startup.xml");
         try
         {
-            using var key = Registry.CurrentUser.OpenSubKey(RegRunKey, writable: true);
-            if (key is null) return false;
-            key.SetValue(TaskName, command);
-            return true;
+            // Task Scheduler requires UTF-16 LE with BOM when importing via /XML.
+            File.WriteAllText(tempXml, xml, Encoding.Unicode);
+            return Schtasks($"/Create /XML \"{tempXml}\" /TN \"{TaskName}\" /F") == 0;
         }
         catch { return false; }
+        finally
+        {
+            try { File.Delete(tempXml); } catch { }
+        }
     }
 
-    private static void RemoveRegistry()
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private static string? GetCurrentExecutablePath()
+    {
+        var exe = Environment.ProcessPath;
+        if (!string.IsNullOrEmpty(exe) && File.Exists(exe))
+            return exe;
+
+        exe = Process.GetCurrentProcess().MainModule?.FileName;
+        if (!string.IsNullOrEmpty(exe) && File.Exists(exe))
+            return exe;
+
+        var processName = Process.GetCurrentProcess().ProcessName;
+        if (!string.IsNullOrEmpty(processName))
+        {
+            exe = Path.Combine(AppContext.BaseDirectory, processName + ".exe");
+            if (!string.IsNullOrEmpty(exe) && File.Exists(exe))
+                return exe;
+        }
+
+        return null;
+    }
+
+    private static void RemoveRegistryLegacy()
     {
         try
         {
@@ -77,9 +147,9 @@ public static class StartupService
             using var p = Process.Start(new ProcessStartInfo("schtasks.exe", args)
             {
                 UseShellExecute = false,
-                CreateNoWindow = true,
+                CreateNoWindow  = true,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true,
+                RedirectStandardError  = true,
             })!;
             p.WaitForExit(8000);
             return p.ExitCode;

@@ -7,7 +7,7 @@
   "targets": {
     ".NETCoreApp,Version=v8.0": {},
     ".NETCoreApp,Version=v8.0/win-x64": {
-      "SftpNetDrive/1.0.0": {
+      "SftpNetDrive/1.1.0": {
         "dependencies": {
           "DokanNet": "2.2.1",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.1",
@@ -1026,7 +1026,7 @@
     }
   },
   "libraries": {
-    "SftpNetDrive/1.0.0": {
+    "SftpNetDrive/1.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

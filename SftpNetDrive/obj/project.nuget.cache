@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZG4l0XbIcaM=",
+  "dgSpecHash": "/bC51Qy4Z8c=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj",
+  "projectFilePath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alexa\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\alexa\\.nuget\\packages\\dokannet\\2.2.1\\dokannet.2.2.1.nupkg.sha512",

@@ -177,11 +177,19 @@
             <Grid>
                 <TextBlock Text="{x:Static loc:Strings.FooterHint}"
                            FontSize="11" Foreground="#767676" VerticalAlignment="Center"/>
-                <CheckBox x:Name="StartupCheckBox"
-                          HorizontalAlignment="Right" VerticalAlignment="Center"
-                          FontSize="11" Foreground="#404040"
-                          Content="{x:Static loc:Strings.StartWithWindows}"
-                          Checked="Startup_Changed" Unchecked="Startup_Changed"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <CheckBox x:Name="CloseToTrayCheckBox"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              FontSize="11" Foreground="#404040"
+                              Content="{x:Static loc:Strings.CloseToTray}"
+                              Checked="CloseToTray_Changed" Unchecked="CloseToTray_Changed"/>
+                    <CheckBox x:Name="StartupCheckBox"
+                              Margin="20 0 0 0"
+                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                              FontSize="11" Foreground="#404040"
+                              Content="{x:Static loc:Strings.StartWithWindows}"
+                              Checked="Startup_Changed" Unchecked="Startup_Changed"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>
