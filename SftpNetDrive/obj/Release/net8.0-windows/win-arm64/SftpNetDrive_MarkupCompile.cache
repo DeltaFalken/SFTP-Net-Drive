@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\alexa\Downloads\FTP to SMB\SftpNetDrive\obj\Release\net8.0-windows\win-arm64\
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-arm64\
 SftpNetDrive
 none
 false
 TRACE;RELEASE;NET;NET8_0;NETCOREAPP
-C:\Users\alexa\Downloads\FTP to SMB\SftpNetDrive\App.xaml
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SFTP-Net-Drive\SftpNetDrive\App.xaml
 2-1771093099
 
-10-1871153460
-2071478112314
+11-1689526260
+2121149180795
 Windows\EditProfileWindow.xaml;Windows\MainWindow.xaml;
 
 False

@@ -71,6 +71,10 @@ public static class Strings
         ? "SFTP Net Drive benötigt den Dokany-Treiber, um Laufwerke einzubinden.\n\nMöchten Sie die Download-Seite öffnen?\n\nhttps://github.com/dokan-dev/dokany/releases\n\nInstallieren Sie DokanSetup.exe und starten Sie SFTP Net Drive neu."
         : "SFTP Net Drive requires the Dokany driver to mount virtual drives.\n\nWould you like to open the download page?\n\nhttps://github.com/dokan-dev/dokany/releases\n\nDownload and install DokanSetup.exe, then restart SFTP Net Drive.";
 
+    public static string DokanWrongArchFmt => _de
+        ? "Eine inkompatible Dokany-Version wurde gefunden.\n\nSFTP Net Drive läuft als {0}, aber die installierte dokan2.dll hat eine falsche Prozessorarchitektur.\n\nBitte installieren Sie die {0}-Version des Dokany-Treibers:\nhttps://github.com/dokan-dev/dokany/releases"
+        : "An incompatible Dokany driver version was detected.\n\nSFTP Net Drive is running as {0}, but the installed dokan2.dll has the wrong processor architecture.\n\nPlease install the {0} version of the Dokany driver:\nhttps://github.com/dokan-dev/dokany/releases";
+
     public static string ErrorTitle => _de ? "Unerwarteter Fehler" : "Unexpected Error";
 
     public static string MountFailedTitle  => _de ? "Verbindung fehlgeschlagen" : "Mount Failed";

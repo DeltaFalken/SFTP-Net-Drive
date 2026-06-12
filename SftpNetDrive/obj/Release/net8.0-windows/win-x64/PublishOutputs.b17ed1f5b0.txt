@@ -1,0 +1,2 @@
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SFTP-Net-Drive\dist\win-x64\SftpNetDrive.pdb
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SFTP-Net-Drive\dist\win-x64\SftpNetDrive.exe

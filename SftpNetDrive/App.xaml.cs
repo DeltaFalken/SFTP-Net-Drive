@@ -46,11 +46,14 @@ public partial class App : Application
             return;
         }
 
-        EnsureDokanOrWarn();
+        if (!EnsureDokanOrWarn()) return;
         BuildTrayIcon();
 
-        // Create window but do NOT show it — user opens via tray
         _mainWindow = new MainWindow(_repo, _mounts);
+
+        // Show window on first run (no profiles yet); otherwise stay in tray
+        if (!_repo.Profiles.Any())
+            _mainWindow.Show();
 
         // Auto-mount profiles flagged for startup
         foreach (var profile in _repo.Profiles.Where(p => p.AutoMount))
@@ -133,11 +136,21 @@ public partial class App : Application
 
     // ── Dokany check ─────────────────────────────────────────────────────────
 
-    private static void EnsureDokanOrWarn()
+    private static bool EnsureDokanOrWarn()
     {
         var dokanDll = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.System), "dokan2.dll");
-        if (File.Exists(dokanDll)) return;
+
+        if (File.Exists(dokanDll))
+        {
+            if (IsDokanNativeArch(dokanDll)) return true;
+
+            var arch = RuntimeInformation.ProcessArchitecture.ToString().ToUpperInvariant();
+            MessageBox.Show(string.Format(Strings.DokanWrongArchFmt, arch),
+                Strings.DokanMissingTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+            Current.Shutdown();
+            return false;
+        }
 
         var result = MessageBox.Show(Strings.DokanMissingMsg, Strings.DokanMissingTitle,
             MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -150,6 +163,28 @@ public partial class App : Application
             });
 
         Current.Shutdown();
+        return false;
+    }
+
+    private static bool IsDokanNativeArch(string dllPath)
+    {
+        try
+        {
+            using var fs = File.OpenRead(dllPath);
+            using var br = new BinaryReader(fs);
+            if (br.ReadUInt16() != 0x5A4D) return false;   // no MZ header
+            fs.Seek(0x3C, SeekOrigin.Begin);
+            fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
+            if (br.ReadUInt32() != 0x00004550) return false; // no PE signature
+            ushort machine = br.ReadUInt16();
+            return RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X64   => machine == 0x8664, // IMAGE_FILE_MACHINE_AMD64
+                Architecture.Arm64 => machine == 0xAA64, // IMAGE_FILE_MACHINE_ARM64
+                _                  => true
+            };
+        }
+        catch { return true; }
     }
 
     // ── P/Invoke ──────────────────────────────────────────────────────────────

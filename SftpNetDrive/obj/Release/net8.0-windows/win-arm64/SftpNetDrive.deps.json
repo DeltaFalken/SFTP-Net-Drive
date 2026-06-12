@@ -10,7 +10,6 @@
       "SftpNetDrive/1.0.0": {
         "dependencies": {
           "DokanNet": "2.2.1",
-          "H.NotifyIcon.Wpf": "2.1.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.1",
           "Microsoft.NET.ILLink.Tasks": "8.0.28",
           "SSH.NET": "2024.2.0",
@@ -946,39 +945,6 @@
           }
         }
       },
-      "H.GeneratedIcons.System.Drawing/2.1.0": {
-        "dependencies": {
-          "System.Drawing.Common": "8.0.7"
-        },
-        "runtime": {
-          "lib/net8.0/H.GeneratedIcons.System.Drawing.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
-          }
-        }
-      },
-      "H.NotifyIcon/2.1.0": {
-        "dependencies": {
-          "H.GeneratedIcons.System.Drawing": "2.1.0"
-        },
-        "runtime": {
-          "lib/net8.0/H.NotifyIcon.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
-          }
-        }
-      },
-      "H.NotifyIcon.Wpf/2.1.0": {
-        "dependencies": {
-          "H.NotifyIcon": "2.1.0"
-        },
-        "runtime": {
-          "lib/net8.0-windows7.0/H.NotifyIcon.Wpf.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
-          }
-        }
-      },
       "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.1": {
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
@@ -999,7 +965,6 @@
         }
       },
       "Microsoft.NET.ILLink.Tasks/8.0.28": {},
-      "Microsoft.Win32.SystemEvents/8.0.0": {},
       "SSH.NET/2024.2.0": {
         "dependencies": {
           "BouncyCastle.Cryptography": "2.4.0"
@@ -1009,11 +974,6 @@
             "assemblyVersion": "2024.2.0.1",
             "fileVersion": "2024.2.0.1"
           }
-        }
-      },
-      "System.Drawing.Common/8.0.7": {
-        "dependencies": {
-          "Microsoft.Win32.SystemEvents": "8.0.0"
         }
       }
     }
@@ -1048,27 +1008,6 @@
       "path": "dokannet/2.2.1",
       "hashPath": "dokannet.2.2.1.nupkg.sha512"
     },
-    "H.GeneratedIcons.System.Drawing/2.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Yn6XETLTcIycGJgddV0kCXHW+ah7pz7LSKfmJEXHwyM5pFWvjq8rEvB9e5dQ4ZNDmFZT7n+H5weLYrBGpAfiRA==",
-      "path": "h.generatedicons.system.drawing/2.1.0",
-      "hashPath": "h.generatedicons.system.drawing.2.1.0.nupkg.sha512"
-    },
-    "H.NotifyIcon/2.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Fc4AsLukCfdHt+A5ORqMarJT6EhKzdrGm/ZiZkdAhdXPDl1ZTUVRleABoxEN8VW9CLeS1HrRwYIlf+Wm1PfRqg==",
-      "path": "h.notifyicon/2.1.0",
-      "hashPath": "h.notifyicon.2.1.0.nupkg.sha512"
-    },
-    "H.NotifyIcon.Wpf/2.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-EtCNj5DmgvdQI9tTm3EJi6JfPxbhwLB0ZFzwUPjmO1SUR5xOVAH0DdCcS0vcszu5cUsr1FxE8GUnJy2jAhJmbQ==",
-      "path": "h.notifyicon.wpf/2.1.0",
-      "hashPath": "h.notifyicon.wpf.2.1.0.nupkg.sha512"
-    },
     "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.1": {
       "type": "package",
       "serviceable": true,
@@ -1090,26 +1029,12 @@
       "path": "microsoft.net.illink.tasks/8.0.28",
       "hashPath": "microsoft.net.illink.tasks.8.0.28.nupkg.sha512"
     },
-    "Microsoft.Win32.SystemEvents/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
-      "path": "microsoft.win32.systemevents/8.0.0",
-      "hashPath": "microsoft.win32.systemevents.8.0.0.nupkg.sha512"
-    },
     "SSH.NET/2024.2.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-9r+4UF2P51lTztpd+H7SJywk7WgmlWB//Cm2o96c6uGVZU5r58ys2/cD9pCgTk0zCdSkfflWL1WtqQ9I4IVO9Q==",
       "path": "ssh.net/2024.2.0",
       "hashPath": "ssh.net.2024.2.0.nupkg.sha512"
-    },
-    "System.Drawing.Common/8.0.7": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-DoeBae0gZvxs3mtfoub6F1k28fSkFPzmhFuvblplKMnLYKmTMVy0j4Yxahh96KM532JzHGDxhJn1VpMKSB1pyg==",
-      "path": "system.drawing.common/8.0.7",
-      "hashPath": "system.drawing.common.8.0.7.nupkg.sha512"
     }
   },
   "runtimes": {
