@@ -1,0 +1,2 @@
+C:\Users\alexa\Downloads\FTP to SMB\dist\win-x64\SftpNetDrive.pdb
+C:\Users\alexa\Downloads\FTP to SMB\dist\win-x64\SftpNetDrive.exe
