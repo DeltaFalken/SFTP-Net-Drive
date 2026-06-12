@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alexa\\Downloads\\FTP to SMB\\SftpNetDrive\\SftpNetDrive.csproj": {}
+    "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alexa\\Downloads\\FTP to SMB\\SftpNetDrive\\SftpNetDrive.csproj": {
+    "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alexa\\Downloads\\FTP to SMB\\SftpNetDrive\\SftpNetDrive.csproj",
+        "projectUniqueName": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj",
         "projectName": "SftpNetDrive",
-        "projectPath": "C:\\Users\\alexa\\Downloads\\FTP to SMB\\SftpNetDrive\\SftpNetDrive.csproj",
+        "projectPath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj",
         "packagesPath": "C:\\Users\\alexa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alexa\\Downloads\\FTP to SMB\\SftpNetDrive\\obj\\",
+        "outputPath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SFTP-Net-Drive\\SftpNetDrive\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\alexa\\AppData\\Roaming\\NuGet\\NuGet.Config"

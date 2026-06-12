@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SftpNetDrive")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68538f282aafcc049f1a634574e816ccf652e79a")]
 [assembly: System.Reflection.AssemblyProductAttribute("SftpNetDrive")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SftpNetDrive")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
