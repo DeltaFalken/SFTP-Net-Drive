@@ -19,7 +19,7 @@ namespace SftpNetDrive.FileSystem;
 /// </summary>
 public sealed class SftpDokanFs : IDokanOperations, IDisposable
 {
-    private readonly ConnectionProfile _profile;
+    private readonly ConnectionSpec _spec;
     private readonly SftpClient _sftp;
     private readonly string _root;   // e.g. "/home/user"
     private readonly object _sftpLock = new();
@@ -32,20 +32,14 @@ public sealed class SftpDokanFs : IDokanOperations, IDisposable
     private static readonly TimeSpan AttrTtl = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan ListTtl = TimeSpan.FromSeconds(3);
 
-    public SftpDokanFs(ConnectionProfile profile, string secret)
+    public SftpDokanFs(ConnectionSpec spec, string password)
     {
-        _profile = profile;
-        _root = profile.RemotePath.TrimEnd('/');
+        _spec = spec;
+        _root = spec.RemotePath.TrimEnd('/');
         if (string.IsNullOrEmpty(_root)) _root = "";
 
-        AuthenticationMethod auth = profile.AuthMethod == Models.AuthMethod.PrivateKey
-            ? new PrivateKeyAuthenticationMethod(profile.Username,
-                string.IsNullOrEmpty(secret)
-                    ? new PrivateKeyFile(profile.PrivateKeyPath!)
-                    : new PrivateKeyFile(profile.PrivateKeyPath!, secret))
-            : new PasswordAuthenticationMethod(profile.Username, secret);
-
-        var connInfo = new ConnectionInfo(profile.Host, profile.Port, profile.Username, auth);
+        AuthenticationMethod auth = new PasswordAuthenticationMethod(spec.Username, password);
+        var connInfo = new ConnectionInfo(spec.Host, spec.Port, spec.Username, auth);
         _sftp = new SftpClient(connInfo);
         _sftp.Connect();
         _sftp.KeepAliveInterval = TimeSpan.FromSeconds(30);
@@ -442,11 +436,19 @@ public sealed class SftpDokanFs : IDokanOperations, IDisposable
         try
         {
             Renci.SshNet.Sftp.SftpFileSystemInformation di;
-            lock (_sftpLock) di = _sftp.GetStatus(_root == "" ? "/" : _root);
-            var blockSize = (long)di.FileSystemBlockSize;
-            totalNumberOfBytes = (long)di.TotalBlocks * blockSize;
-            freeBytesAvailable = (long)di.AvailableBlocks * blockSize;
-            totalNumberOfFreeBytes = (long)di.FreeBlocks * blockSize;
+            lock (_sftpLock) di = _sftp.GetStatus(string.IsNullOrEmpty(_root) ? "/" : _root);
+            var blockSize   = (long)di.FileSystemBlockSize;
+            var freeBlocks  = (long)di.FreeBlocks;       // f_bfree  — root-inclusive free
+            var availBlocks = (long)di.AvailableBlocks;  // f_bavail — non-root / quota-aware
+            var usedBlocks  = (long)di.TotalBlocks - freeBlocks;
+
+            // Report the user-visible "total" as used + available rather than the raw
+            // filesystem total. On quota-aware filesystems (e.g. ZFS per-dataset quotas)
+            // f_bavail already reflects the user's quota ceiling, so usedBlocks + availBlocks
+            // equals the quota limit rather than the full partition size.
+            totalNumberOfBytes     = (usedBlocks + availBlocks) * blockSize;
+            freeBytesAvailable     = availBlocks * blockSize;
+            totalNumberOfFreeBytes = freeBlocks  * blockSize;
         }
         catch
         {
@@ -460,7 +462,7 @@ public sealed class SftpDokanFs : IDokanOperations, IDisposable
 
     public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features, out string fileSystemName, out uint maximumComponentLength, IDokanFileInfo info)
     {
-        volumeLabel = _profile.Name;
+        volumeLabel = _spec.UncPath;
         features = FileSystemFeatures.CaseSensitiveSearch
             | FileSystemFeatures.CasePreservedNames
             | FileSystemFeatures.UnicodeOnDisk;

@@ -15,15 +15,26 @@ namespace SftpNetDrive.Services;
 /// </summary>
 public static class StartupService
 {
-    private const string TaskName   = "SftpNetDrive";
-    private const string RegRunKey  = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-    internal const string AutostartArg = "--autostart";
+    // Generic task name used by older installs and the installer's Pascal code.
+    // Per-user task names include the user's SID so multiple accounts on the same
+    // machine each get an independent scheduled task.
+    private const string LegacyTaskName   = "SftpNetDrive";
+    private const string RegRunKey        = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+    internal const string AutostartArg          = "--autostart";
+    internal const string RegisterStartupArg    = "--register-startup";
+    internal const string UnregisterStartupArg  = "--unregister-startup";
+
+    private static string GetTaskName()
+    {
+        var sid = WindowsIdentity.GetCurrent().User?.Value;
+        return string.IsNullOrEmpty(sid) ? LegacyTaskName : $"SftpNetDrive_{sid}";
+    }
 
     // Only the scheduled task is considered authoritative; the HKCU\Run key is
     // unreliable for admin-required apps (Windows silently drops the UAC elevation
     // request at logon when launching from Run keys).
     public static bool IsEnabled() =>
-        Schtasks($"/Query /TN \"{TaskName}\"") == 0;
+        Schtasks($"/Query /TN \"{GetTaskName()}\"") == 0;
 
     public static bool Enable()
     {
@@ -38,9 +49,17 @@ public static class StartupService
         return Enable();
     }
 
+    // Removes the old non-SID task that existed before per-user task names were
+    // introduced. That task fired for every user's logon and ran the app with
+    // whatever identity the logged-on user had — or, if /RU was specified at
+    // creation time, with va_ma's identity in every session.
+    public static void RemoveLegacyTaskIfExists() =>
+        Schtasks($"/Delete /TN \"{LegacyTaskName}\" /F");
+
     public static bool Disable()
     {
-        Schtasks($"/Delete /TN \"{TaskName}\" /F");
+        Schtasks($"/Delete /TN \"{GetTaskName()}\" /F");
+        Schtasks($"/Delete /TN \"{LegacyTaskName}\" /F"); // clean up any legacy generic task
         RemoveRegistryLegacy();
         return !IsEnabled();
     }
@@ -74,7 +93,7 @@ public static class StartupService
                 <Principal id="Author">
                   <UserId>{sid}</UserId>
                   <LogonType>InteractiveToken</LogonType>
-                  <RunLevel>HighestAvailable</RunLevel>
+                  <RunLevel>LeastPrivilege</RunLevel>
                 </Principal>
               </Principals>
               <Settings>
@@ -98,7 +117,7 @@ public static class StartupService
         {
             // Task Scheduler requires UTF-16 LE with BOM when importing via /XML.
             File.WriteAllText(tempXml, xml, Encoding.Unicode);
-            return Schtasks($"/Create /XML \"{tempXml}\" /TN \"{TaskName}\" /F") == 0;
+            return Schtasks($"/Create /XML \"{tempXml}\" /TN \"{GetTaskName()}\" /F") == 0;
         }
         catch { return false; }
         finally
@@ -135,7 +154,7 @@ public static class StartupService
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(RegRunKey, writable: true);
-            key?.DeleteValue(TaskName, throwOnMissingValue: false);
+            key?.DeleteValue(LegacyTaskName, throwOnMissingValue: false);
         }
         catch { }
     }

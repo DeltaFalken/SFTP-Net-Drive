@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <!-- WinForms only — needed for the hidden SessionWatcher HWND + message loop.
+         WPF removed: the app has no visible UI. -->
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -16,14 +17,15 @@
     <Optimize>true</Optimize>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <Version>1.1.0</Version>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DokanNet" Version="2.2.1" />
     <PackageReference Include="SSH.NET" Version="2024.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

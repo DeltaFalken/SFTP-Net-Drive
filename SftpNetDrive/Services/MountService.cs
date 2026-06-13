@@ -7,134 +7,130 @@ using SftpNetDrive.Models;
 
 namespace SftpNetDrive.Services;
 
-public class MountChangedEventArgs(Guid profileId, MountStatus status, string? error = null) : EventArgs
-{
-    public Guid ProfileId { get; } = profileId;
-    public MountStatus Status { get; } = status;
-    public string? Error { get; } = error;
-}
-
 public class MountService
 {
-    private readonly Dictionary<Guid, ActiveMount> _mounts = [];
+    private readonly Dictionary<string, ActiveMount> _mounts = [];  // key = drive letter ("Z")
     private readonly object _lock = new();
 
-    public event EventHandler<MountChangedEventArgs>? MountChanged;
-
-    public MountStatus GetStatus(Guid profileId)
+    public bool IsMounted(string letter)
     {
+        var key = Norm(letter);
         lock (_lock)
-            return _mounts.TryGetValue(profileId, out var m) ? m.Status : MountStatus.Unmounted;
+            return _mounts.TryGetValue(key, out var m) && m.Status == MountStatus.Mounted;
     }
 
-    public bool IsMounted(Guid profileId)
+    public MountStatus GetStatus(string letter)
     {
+        var key = Norm(letter);
         lock (_lock)
-            return _mounts.TryGetValue(profileId, out var m) && m.Status == MountStatus.Mounted;
+            return _mounts.TryGetValue(key, out var m) ? m.Status : MountStatus.Unmounted;
     }
 
-    public async Task<(bool Success, string? Error)> MountAsync(ConnectionProfile profile, CancellationToken ct = default)
+    public async Task<(bool Success, string? Error)> MountAsync(
+        ConnectionSpec spec,
+        CancellationToken ct = default,
+        string? passwordOverride = null)
     {
+        var key = Norm(spec.Letter);
+
         lock (_lock)
         {
-            if (_mounts.TryGetValue(profile.Id, out var existing) && existing.Status == MountStatus.Mounted)
+            if (_mounts.TryGetValue(key, out var ex) && ex.Status == MountStatus.Mounted)
                 return (true, null);
         }
 
-        var secret = CredentialService.Load(profile.Id) ?? "";
+        var secret = passwordOverride ?? CredentialService.Load(spec.Letter) ?? "";
 
-        var mount = new ActiveMount(profile);
-        lock (_lock) _mounts[profile.Id] = mount;
-
-        Raise(profile.Id, MountStatus.Connecting);
+        var mount = new ActiveMount(spec);
+        lock (_lock) _mounts[key] = mount;
 
         mount.Thread = new Thread(() =>
         {
             SftpDokanFs? fs = null;
             try
             {
-                // Connect SFTP first — throws on auth failure
-                fs = new SftpDokanFs(profile, secret);
+                fs = new SftpDokanFs(spec, secret);
                 mount.FileSystem = fs;
 
-                var dokan = new Dokan(new NullLogger());
-                mount.Dokan = dokan;
+                var dokan    = new Dokan(new NullLogger());
+                mount.Dokan  = dokan;
 
                 var instance = new DokanInstanceBuilder(dokan)
                     .ConfigureOptions(opt =>
                     {
-                        opt.Options = DokanOptions.NetworkDrive;
-                        opt.MountPoint = $"{profile.DriveLetter}:";
-                        opt.UNCName = $"\\\\SFTP\\{profile.Name.Replace(' ', '_')}";
+                        // NetworkDrive + WNetAddConnection2 makes the drive session-local:
+                        // only the current user's logon session sees it in Explorer.
+                        // CurrentSession is intentionally omitted — it blocks the Dokan
+                        // network-provider callback during mount setup.
+                        opt.Options  = DokanOptions.NetworkDrive;
+                        opt.MountPoint = $"{spec.Letter}:";
+                        // Dokan UNCName must be exactly \Server\Share (2 components).
+                        // Strip any subpath — the root offset lives in SftpDokanFs._root.
+                        var uncParts = spec.UncPath.TrimStart('\\').Split('\\', 3);
+                        opt.UNCName  = uncParts.Length >= 2
+                            ? @"\" + uncParts[0] + @"\" + uncParts[1]
+                            : spec.UncPath.Replace(@"\\", @"\");
                         opt.AllocationUnitSize = 512;
-                        opt.SectorSize = 512;
+                        opt.SectorSize         = 512;
                     })
                     .Build(fs);
 
                 mount.Instance = instance;
-                mount.Status = MountStatus.Mounted;
-                Raise(profile.Id, MountStatus.Mounted);
+                mount.Status   = MountStatus.Mounted;
                 mount.ReadyTcs.TrySetResult((true, null));
-
                 instance.WaitForFileSystemClosed(uint.MaxValue);
             }
             catch (Exception ex)
             {
                 fs?.Dispose();
                 var msg = ex.Message;
-                lock (_lock) _mounts.Remove(profile.Id);
+                lock (_lock) _mounts.Remove(key);
                 mount.ReadyTcs.TrySetResult((false, msg));
-                Raise(profile.Id, MountStatus.Error, msg);
                 return;
             }
 
-            lock (_lock) _mounts.Remove(profile.Id);
-            Raise(profile.Id, MountStatus.Unmounted);
+            lock (_lock) _mounts.Remove(key);
         });
 
         mount.Thread.IsBackground = true;
-        mount.Thread.Name = $"SFTP-{profile.DriveLetter}:";
+        mount.Thread.Name = $"SFTP-{spec.Letter}:";
         mount.Thread.Start();
 
-        // Wait up to 15 s for connection result
-        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        timeoutCts.CancelAfter(TimeSpan.FromSeconds(15));
-        try { return await mount.ReadyTcs.Task.WaitAsync(timeoutCts.Token); }
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeout.CancelAfter(TimeSpan.FromSeconds(20));
+        try { return await mount.ReadyTcs.Task.WaitAsync(timeout.Token); }
         catch (OperationCanceledException) { return (false, "Connection timed out."); }
     }
 
-    public void Unmount(Guid profileId)
+    public void Unmount(string letter)
     {
+        var key = Norm(letter);
         ActiveMount? mount;
-        lock (_lock) _mounts.TryGetValue(profileId, out mount);
+        lock (_lock) _mounts.TryGetValue(key, out mount);
         if (mount?.Dokan is null) return;
 
-        try { mount.Dokan.RemoveMountPoint($"{mount.Profile.DriveLetter}:"); }
+        try { mount.Dokan.RemoveMountPoint($"{mount.Spec.Letter}:"); }
         catch { }
     }
 
     public void UnmountAll()
     {
-        List<Guid> ids;
-        lock (_lock) ids = [.. _mounts.Keys];
-        foreach (var id in ids) Unmount(id);
+        List<string> keys;
+        lock (_lock) keys = [.. _mounts.Keys];
+        foreach (var k in keys) Unmount(k);
     }
 
-    private void Raise(Guid id, MountStatus status, string? error = null)
-    {
-        lock (_lock)
-            if (_mounts.TryGetValue(id, out var m)) m.Status = status;
-        MountChanged?.Invoke(this, new MountChangedEventArgs(id, status, error));
-    }
+    private static string Norm(string letter) =>
+        letter.TrimEnd(':').ToUpperInvariant();
 
-    private sealed class ActiveMount(ConnectionProfile profile)
+    private sealed class ActiveMount(ConnectionSpec spec)
     {
-        public ConnectionProfile Profile { get; } = profile;
-        public MountStatus Status { get; set; } = MountStatus.Connecting;
-        public Thread? Thread { get; set; }
-        public SftpDokanFs? FileSystem { get; set; }
-        public Dokan? Dokan { get; set; }
-        public DokanInstance? Instance { get; set; }
+        public ConnectionSpec Spec    { get; } = spec;
+        public MountStatus    Status  { get; set; } = MountStatus.Connecting;
+        public Thread?        Thread  { get; set; }
+        public SftpDokanFs?   FileSystem { get; set; }
+        public Dokan?         Dokan   { get; set; }
+        public DokanInstance? Instance{ get; set; }
         public TaskCompletionSource<(bool, string?)> ReadyTcs { get; } = new();
     }
 }

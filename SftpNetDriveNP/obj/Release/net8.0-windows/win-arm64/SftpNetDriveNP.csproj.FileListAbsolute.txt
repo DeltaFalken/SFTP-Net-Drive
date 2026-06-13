@@ -1,0 +1,12 @@
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\bin\Release\net8.0-windows\win-arm64\SftpNetDriveNP.deps.json
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\bin\Release\net8.0-windows\win-arm64\SftpNetDriveNP.dll
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\bin\Release\net8.0-windows\win-arm64\SftpNetDriveNP.pdb
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.AssemblyInfoInputs.cache
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.AssemblyInfo.cs
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.csproj.CoreCompileInputs.cache
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.sourcelink.json
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.dll
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\refint\SftpNetDriveNP.dll
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\SftpNetDriveNP.pdb
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDriveNP\obj\Release\net8.0-windows\win-arm64\ref\SftpNetDriveNP.dll

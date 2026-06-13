@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "ojjVcxbyMr8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SftpNetDriveNP\\SftpNetDriveNP.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\alexa\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\8.0.27\\microsoft.dotnet.ilcompiler.8.0.27.nupkg.sha512",
+    "C:\\Users\\alexa\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.27\\microsoft.net.illink.tasks.8.0.27.nupkg.sha512",
+    "C:\\Users\\alexa\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.27\\microsoft.netcore.app.ref.8.0.27.nupkg.sha512",
+    "C:\\Users\\alexa\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.27\\microsoft.windowsdesktop.app.ref.8.0.27.nupkg.sha512",
+    "C:\\Users\\alexa\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.27\\microsoft.aspnetcore.app.ref.8.0.27.nupkg.sha512",
+    "C:\\Users\\alexa\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\8.0.27\\runtime.win-x64.microsoft.dotnet.ilcompiler.8.0.27.nupkg.sha512"
+  ],
+  "logs": []
+}

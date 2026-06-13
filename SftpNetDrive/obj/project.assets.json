@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    "net8.0-windows7.0": {
+    "net8.0-windows": {
       "BouncyCastle.Cryptography/2.4.0": {
         "type": "package",
         "compile": {
@@ -74,10 +74,19 @@
           "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.28": {
+      "Microsoft.NET.ILLink.Tasks/8.0.27": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.ILLink.Tasks.props": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
         }
       },
       "SSH.NET/2024.2.0": {
@@ -93,11 +102,80 @@
         "runtime": {
           "lib/net8.0/Renci.SshNet.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "System.IO.Pipes.AccessControl/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Security.AccessControl": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "compile": {
+          "ref/net5.0/System.IO.Pipes.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/System.IO.Pipes.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net5.0/System.IO.Pipes.AccessControl.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "System.Security.AccessControl/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "System.Security.Principal.Windows/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
+            "assetType": "runtime",
+            "rid": "win"
           }
         }
       }
     },
-    "net8.0-windows7.0/win-arm64": {
+    "net8.0-windows/win-x64": {
       "BouncyCastle.Cryptography/2.4.0": {
         "type": "package",
         "compile": {
@@ -170,10 +248,19 @@
           "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.28": {
+      "Microsoft.NET.ILLink.Tasks/8.0.27": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.ILLink.Tasks.props": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
         }
       },
       "SSH.NET/2024.2.0": {
@@ -188,6 +275,53 @@
         },
         "runtime": {
           "lib/net8.0/Renci.SshNet.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.IO.Pipes.AccessControl/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Security.AccessControl": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "compile": {
+          "ref/net5.0/System.IO.Pipes.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "runtimes/win/lib/net5.0/System.IO.Pipes.AccessControl.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Security.AccessControl/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Security.Principal.Windows/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
             "related": ".xml"
           }
         }
@@ -353,10 +487,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.NET.ILLink.Tasks/8.0.28": {
-      "sha512": "XMqgVjlLxLqWmEh3c49haXLQwsMNtvo6YscUaqfvEGfg1iA8hnYgkUVq3i9Zu9gKeNKMWiiZKVwZExc/qyEAsQ==",
+    "Microsoft.NET.ILLink.Tasks/8.0.27": {
+      "sha512": "rQi9TxifHRnXP7lVRZH05DxD2/XGbJp12q0ozcbrlBlBnyyzssFTH/2vLhtKWUp2CT1qVscTrcYTFiwTyKPKRg==",
       "type": "package",
-      "path": "microsoft.net.illink.tasks/8.0.28",
+      "path": "microsoft.net.illink.tasks/8.0.27",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -370,7 +504,7 @@
         "build/Microsoft.NET.ILLink.Analyzers.props",
         "build/Microsoft.NET.ILLink.Tasks.props",
         "build/Microsoft.NET.ILLink.targets",
-        "microsoft.net.illink.tasks.8.0.28.nupkg.sha512",
+        "microsoft.net.illink.tasks.8.0.27.nupkg.sha512",
         "microsoft.net.illink.tasks.nuspec",
         "tools/net472/ILLink.Tasks.dll",
         "tools/net472/ILLink.Tasks.dll.config",
@@ -404,6 +538,24 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.NETCore.Platforms/5.0.0": {
+      "sha512": "VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ==",
+      "type": "package",
+      "path": "microsoft.netcore.platforms/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netstandard1.0/_._",
+        "microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+        "microsoft.netcore.platforms.nuspec",
+        "runtime.json",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "SSH.NET/2024.2.0": {
       "sha512": "9r+4UF2P51lTztpd+H7SJywk7WgmlWB//Cm2o96c6uGVZU5r58ys2/cD9pCgTk0zCdSkfflWL1WtqQ9I4IVO9Q==",
       "type": "package",
@@ -428,21 +580,160 @@
         "ssh.net.2024.2.0.nupkg.sha512",
         "ssh.net.nuspec"
       ]
+    },
+    "System.IO.Pipes.AccessControl/5.0.0": {
+      "sha512": "P0FIsXSFNL1AXlHO9zpJ9atRUzVyoPZCkcbkYGZfXXMx9xlGA2H3HOGBwIhpKhB+h0eL3hry/z0UcfJZ+yb2kQ==",
+      "type": "package",
+      "path": "system.io.pipes.accesscontrol/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net46/System.IO.Pipes.AccessControl.dll",
+        "lib/net461/System.IO.Pipes.AccessControl.dll",
+        "lib/net5.0/System.IO.Pipes.AccessControl.dll",
+        "lib/net5.0/System.IO.Pipes.AccessControl.xml",
+        "lib/netstandard1.3/System.IO.Pipes.AccessControl.dll",
+        "lib/netstandard2.0/System.IO.Pipes.AccessControl.dll",
+        "ref/net46/System.IO.Pipes.AccessControl.dll",
+        "ref/net461/System.IO.Pipes.AccessControl.dll",
+        "ref/net461/System.IO.Pipes.AccessControl.xml",
+        "ref/net5.0/System.IO.Pipes.AccessControl.dll",
+        "ref/net5.0/System.IO.Pipes.AccessControl.xml",
+        "ref/netstandard1.3/System.IO.Pipes.AccessControl.dll",
+        "ref/netstandard2.0/System.IO.Pipes.AccessControl.dll",
+        "ref/netstandard2.0/System.IO.Pipes.AccessControl.xml",
+        "runtimes/win/lib/net46/System.IO.Pipes.AccessControl.dll",
+        "runtimes/win/lib/net461/System.IO.Pipes.AccessControl.dll",
+        "runtimes/win/lib/net5.0/System.IO.Pipes.AccessControl.dll",
+        "runtimes/win/lib/net5.0/System.IO.Pipes.AccessControl.xml",
+        "runtimes/win/lib/netcoreapp2.1/System.IO.Pipes.AccessControl.dll",
+        "system.io.pipes.accesscontrol.5.0.0.nupkg.sha512",
+        "system.io.pipes.accesscontrol.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.Security.AccessControl/5.0.0": {
+      "sha512": "dagJ1mHZO3Ani8GH0PHpPEe/oYO+rVdbQjvjJkBRNQkX4t0r1iaeGn8+/ybkSLEan3/slM0t59SVdHzuHf2jmw==",
+      "type": "package",
+      "path": "system.security.accesscontrol/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net46/System.Security.AccessControl.dll",
+        "lib/net461/System.Security.AccessControl.dll",
+        "lib/net461/System.Security.AccessControl.xml",
+        "lib/netstandard1.3/System.Security.AccessControl.dll",
+        "lib/netstandard2.0/System.Security.AccessControl.dll",
+        "lib/netstandard2.0/System.Security.AccessControl.xml",
+        "lib/uap10.0.16299/_._",
+        "ref/net46/System.Security.AccessControl.dll",
+        "ref/net461/System.Security.AccessControl.dll",
+        "ref/net461/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/System.Security.AccessControl.dll",
+        "ref/netstandard1.3/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/de/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/es/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/fr/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/it/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/ja/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/ko/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/ru/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/zh-hans/System.Security.AccessControl.xml",
+        "ref/netstandard1.3/zh-hant/System.Security.AccessControl.xml",
+        "ref/netstandard2.0/System.Security.AccessControl.dll",
+        "ref/netstandard2.0/System.Security.AccessControl.xml",
+        "ref/uap10.0.16299/_._",
+        "runtimes/win/lib/net46/System.Security.AccessControl.dll",
+        "runtimes/win/lib/net461/System.Security.AccessControl.dll",
+        "runtimes/win/lib/net461/System.Security.AccessControl.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.xml",
+        "runtimes/win/lib/netstandard1.3/System.Security.AccessControl.dll",
+        "runtimes/win/lib/uap10.0.16299/_._",
+        "system.security.accesscontrol.5.0.0.nupkg.sha512",
+        "system.security.accesscontrol.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.Security.Principal.Windows/5.0.0": {
+      "sha512": "t0MGLukB5WAVU9bO3MGzvlGnyJPgUlcwerXn1kzBRjwLKixT96XV0Uza41W49gVd8zEMFu9vQEFlv0IOrytICA==",
+      "type": "package",
+      "path": "system.security.principal.windows/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net46/System.Security.Principal.Windows.dll",
+        "lib/net461/System.Security.Principal.Windows.dll",
+        "lib/net461/System.Security.Principal.Windows.xml",
+        "lib/netstandard1.3/System.Security.Principal.Windows.dll",
+        "lib/netstandard2.0/System.Security.Principal.Windows.dll",
+        "lib/netstandard2.0/System.Security.Principal.Windows.xml",
+        "lib/uap10.0.16299/_._",
+        "ref/net46/System.Security.Principal.Windows.dll",
+        "ref/net461/System.Security.Principal.Windows.dll",
+        "ref/net461/System.Security.Principal.Windows.xml",
+        "ref/netcoreapp3.0/System.Security.Principal.Windows.dll",
+        "ref/netcoreapp3.0/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/System.Security.Principal.Windows.dll",
+        "ref/netstandard1.3/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/de/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/es/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/fr/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/it/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/ja/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/ko/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/ru/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/zh-hans/System.Security.Principal.Windows.xml",
+        "ref/netstandard1.3/zh-hant/System.Security.Principal.Windows.xml",
+        "ref/netstandard2.0/System.Security.Principal.Windows.dll",
+        "ref/netstandard2.0/System.Security.Principal.Windows.xml",
+        "ref/uap10.0.16299/_._",
+        "runtimes/unix/lib/netcoreapp2.0/System.Security.Principal.Windows.dll",
+        "runtimes/unix/lib/netcoreapp2.0/System.Security.Principal.Windows.xml",
+        "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll",
+        "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.xml",
+        "runtimes/win/lib/net46/System.Security.Principal.Windows.dll",
+        "runtimes/win/lib/net461/System.Security.Principal.Windows.dll",
+        "runtimes/win/lib/net461/System.Security.Principal.Windows.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Security.Principal.Windows.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Security.Principal.Windows.xml",
+        "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.dll",
+        "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.xml",
+        "runtimes/win/lib/netstandard1.3/System.Security.Principal.Windows.dll",
+        "runtimes/win/lib/uap10.0.16299/_._",
+        "system.security.principal.windows.5.0.0.nupkg.sha512",
+        "system.security.principal.windows.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0-windows7.0": [
+    "net8.0-windows": [
       "DokanNet >= 2.2.1",
       "Microsoft.Extensions.Logging.Abstractions >= 8.0.1",
-      "Microsoft.NET.ILLink.Tasks >= 8.0.28",
-      "SSH.NET >= 2024.2.0"
+      "Microsoft.NET.ILLink.Tasks >= 8.0.27",
+      "SSH.NET >= 2024.2.0",
+      "System.IO.Pipes.AccessControl >= 5.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\alexa\\.nuget\\packages\\": {}
+    "C:\\Users\\alexa\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.1.0",
+    "version": "2.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SftpNetDrive\\SftpNetDrive.csproj",
       "projectName": "SftpNetDrive",
@@ -450,17 +741,25 @@
       "packagesPath": "C:\\Users\\alexa\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\alexa\\Downloads\\SFTP-Net-Drive\\SftpNetDrive\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\alexa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\alexa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0-windows"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0-windows7.0": {
+        "net8.0-windows": {
+          "framework": "net8.0-windows7.0",
           "targetAlias": "net8.0-windows",
           "projectReferences": {}
         }
@@ -474,10 +773,12 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
-      "net8.0-windows7.0": {
+      "net8.0-windows": {
+        "framework": "net8.0-windows7.0",
         "targetAlias": "net8.0-windows",
         "dependencies": {
           "DokanNet": {
@@ -491,12 +792,16 @@
           "Microsoft.NET.ILLink.Tasks": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[8.0.28, )",
+            "version": "[8.0.27, )",
             "autoReferenced": true
           },
           "SSH.NET": {
             "target": "Package",
             "version": "[2024.2.0, )"
+          },
+          "System.IO.Pipes.AccessControl": {
+            "target": "Package",
+            "version": "[5.0.0, )"
           }
         },
         "imports": [
@@ -512,31 +817,47 @@
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.AspNetCore.App.Runtime.win-arm64",
-            "version": "[8.0.28, 8.0.28]"
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.27, 8.0.27]"
           },
           {
-            "name": "Microsoft.NETCore.App.Runtime.win-arm64",
-            "version": "[8.0.28, 8.0.28]"
+            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "version": "[8.0.27, 8.0.27]"
           },
           {
-            "name": "Microsoft.WindowsDesktop.App.Runtime.win-arm64",
-            "version": "[8.0.28, 8.0.28]"
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[8.0.27, 8.0.27]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.27, 8.0.27]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[8.0.27, 8.0.27]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.27, 8.0.27]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "version": "[8.0.27, 8.0.27]"
           }
         ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           },
-          "Microsoft.WindowsDesktop.App": {
+          "Microsoft.WindowsDesktop.App.WindowsForms": {
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
-      "win-arm64": {
+      "win-x64": {
         "#import": []
       }
     }

@@ -1,0 +1,11 @@
+EXPORTS
+   DotNetRuntimeDebugHeader DATA
+   NPGetCaps
+   NPAddConnection
+   NPAddConnection3
+   NPCancelConnection
+   NPGetConnection
+   NPOpenEnum
+   NPEnumResource
+   NPCloseEnum
+   NPGetResourceInformation

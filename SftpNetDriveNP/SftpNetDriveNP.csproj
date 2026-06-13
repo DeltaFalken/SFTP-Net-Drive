@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PublishAot>true</PublishAot>
+    <AssemblyName>SftpNetDriveNP</AssemblyName>
+    <RootNamespace>SftpNetDriveNP</RootNamespace>
+    <Platforms>x64;ARM64</Platforms>
+    <!-- Suppress trim warnings — we only use trim-safe APIs -->
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <IlcDisableReflection>false</IlcDisableReflection>
+  </PropertyGroup>
+
+</Project>

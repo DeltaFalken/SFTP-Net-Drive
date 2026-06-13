@@ -1225,7 +1225,6 @@ C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\hostfxr.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\hostpolicy.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\mscordaccore.dll
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\mscordaccore_amd64_amd64_8.0.2826.26413.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\mscordbi.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\mscorrc.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\msquic.dll
@@ -1456,14 +1455,6 @@ C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\zh-Hant\WindowsBase.resources.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\zh-Hant\WindowsFormsIntegration.resources.dll
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.csproj.AssemblyReference.cache
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\App.baml
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\Windows\EditProfileWindow.g.cs
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\Windows\MainWindow.g.cs
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\App.g.cs
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive_MarkupCompile.cache
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive_MarkupCompile.lref
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\Windows\EditProfileWindow.baml
-C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\Windows\MainWindow.baml
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.g.resources
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.AssemblyInfoInputs.cache
@@ -1476,3 +1467,4 @@ C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.pdb
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\SftpNetDrive.genruntimeconfig.cache
 C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\obj\Release\net8.0-windows\win-x64\ref\SftpNetDrive.dll
+C:\Users\alexa\Downloads\SFTP-Net-Drive\SftpNetDrive\bin\Release\net8.0-windows\win-x64\mscordaccore_amd64_amd64_8.0.2726.22922.dll

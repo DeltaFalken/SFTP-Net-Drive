@@ -4,8 +4,11 @@
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-        <!-- requireAdministrator needed for Dokan driver interaction -->
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
+        <!-- asInvoker: run as the launching user with no elevation.
+             Dokan does not require admin after the driver is installed.
+             requireAdministrator would force non-admin users to supply admin
+             credentials (e.g. va_ma's), causing the app to run as the wrong user. -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
       </requestedPrivileges>
     </security>
   </trustInfo>

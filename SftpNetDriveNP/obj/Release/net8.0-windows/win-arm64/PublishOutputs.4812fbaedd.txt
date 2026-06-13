@@ -1,0 +1,2 @@
+C:\Users\alexa\Downloads\SFTP-Net-Drive\dist\win-arm64\SftpNetDriveNP.dll
+C:\Users\alexa\Downloads\SFTP-Net-Drive\dist\win-arm64\SftpNetDriveNP.pdb

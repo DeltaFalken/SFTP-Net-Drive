@@ -3,18 +3,22 @@ using System.Text;
 
 namespace SftpNetDrive.Services;
 
+/// <summary>
+/// Stores SSH passwords in the Windows Credential Manager.
+/// Key format: "SftpNetDrive_Z" (drive letter, no colon, upper-case).
+/// </summary>
 public static class CredentialService
 {
-    private const uint CredTypeGeneric = 1;
+    private const uint CredTypeGeneric   = 1;
     private const uint PersistLocalMachine = 2;
-    private const string Prefix = "SftpNetDrive_";
+    private const string Prefix          = "SftpNetDrive_";
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     private struct CREDENTIAL
     {
         public uint Flags;
         public uint Type;
-        [MarshalAs(UnmanagedType.LPWStr)] public string TargetName;
+        [MarshalAs(UnmanagedType.LPWStr)] public string  TargetName;
         [MarshalAs(UnmanagedType.LPWStr)] public string? Comment;
         public long LastWritten;
         public uint CredentialBlobSize;
@@ -38,30 +42,31 @@ public static class CredentialService
     [DllImport("advapi32.dll", SetLastError = true)]
     private static extern void CredFree(IntPtr credential);
 
-    public static void Save(Guid profileId, string secret)
+    /// <param name="letter">Drive letter — "Z", "Z:", or any case.</param>
+    public static void Save(string letter, string secret)
     {
-        var blob = Encoding.Unicode.GetBytes(secret);
+        var blob    = Encoding.Unicode.GetBytes(secret);
         var blobPtr = Marshal.AllocHGlobal(blob.Length);
         try
         {
             Marshal.Copy(blob, 0, blobPtr, blob.Length);
             var cred = new CREDENTIAL
             {
-                Type = CredTypeGeneric,
-                TargetName = Prefix + profileId,
+                Type               = CredTypeGeneric,
+                TargetName         = Key(letter),
                 CredentialBlobSize = (uint)blob.Length,
-                CredentialBlob = blobPtr,
-                Persist = PersistLocalMachine,
-                UserName = "SftpNetDrive"
+                CredentialBlob     = blobPtr,
+                Persist            = PersistLocalMachine,
+                UserName           = "SftpNetDrive",
             };
             CredWrite(ref cred, 0);
         }
         finally { Marshal.FreeHGlobal(blobPtr); }
     }
 
-    public static string? Load(Guid profileId)
+    public static string? Load(string letter)
     {
-        if (!CredRead(Prefix + profileId, CredTypeGeneric, 0, out var ptr))
+        if (!CredRead(Key(letter), CredTypeGeneric, 0, out var ptr))
             return null;
         try
         {
@@ -74,6 +79,9 @@ public static class CredentialService
         finally { CredFree(ptr); }
     }
 
-    public static void Delete(Guid profileId) =>
-        CredDelete(Prefix + profileId, CredTypeGeneric, 0);
+    public static void Delete(string letter) =>
+        CredDelete(Key(letter), CredTypeGeneric, 0);
+
+    private static string Key(string letter) =>
+        Prefix + letter.TrimEnd(':').ToUpperInvariant();
 }

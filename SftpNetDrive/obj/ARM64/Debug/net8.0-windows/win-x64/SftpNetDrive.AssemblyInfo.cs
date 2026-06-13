@@ -12,11 +12,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("SftpNetDrive")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.0+0ae83ade717a7dc86b3a0670d872f696f2535ae7")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("2.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0+f8d3485094c290ceebc6b9afbf8b7e25d1d83a6e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SftpNetDrive")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SftpNetDrive")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.1.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("2.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 
